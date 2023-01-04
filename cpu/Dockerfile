@@ -22,11 +22,11 @@ ENV PATH=${CONDA_DIR}/bin:${PATH}
 #    The root user is already created, so won't pick up changes to /etc/skel
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
-        wget bzip2 ca-certificates \
-        git \
-	htop \
-        tini \
-        > /dev/null && \
+    wget bzip2 ca-certificates \
+    git \
+    htop \
+    tini \
+    > /dev/null && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
@@ -36,6 +36,7 @@ RUN apt-get update > /dev/null && \
     conda install -y python=${PYTHON_VERSION} cmake conda-build pyyaml ipython jupyter && \
     conda install -y numpy mkl "libblas=*=*mkl" && \
     conda install -y pytorch torchvision torchaudio cpuonly -c pytorch-nightly && \
+    jupyter notebook --generate-config && \
     conda clean --tarballs --index-cache --packages --yes && \
     find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
     find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \
