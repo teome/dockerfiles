@@ -25,6 +25,7 @@ RUN apt-get update > /dev/null && \
     wget bzip2 ca-certificates \
     git \
     htop \
+    vim.tiny \
     tini \
     > /dev/null && \
     apt-get clean && \
