@@ -22,7 +22,7 @@ RUN apt-get update > /dev/null && \
     wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
     /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
     rm /tmp/miniforge.sh && \
-    conda install -y python=${PYTHON_VERSION} cmake conda-build pyyaml ipython jupyter black pylint transformers sentencepiece && \
+    conda install -y python=${PYTHON_VERSION} cmake conda-build pyyaml ipython jupyter black pylint transformers sentencepiece wandb && \
     conda install -y numpy mkl "libblas=*=*mkl" && \
     conda install -y pytorch torchvision torchaudio pytorch-cuda=${CUDA_VERSION} -c pytorch-nightly -c nvidia && \
     jupyter notebook --generate-config && \
