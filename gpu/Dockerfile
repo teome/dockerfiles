@@ -1,4 +1,4 @@
-FROM nvidia/11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 LABEL maintainer="Dominic Kelly"
 
 ARG PYTHON_VERSION=3.10
