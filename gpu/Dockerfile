@@ -2,7 +2,7 @@ FROM nvidia/11.8.0-cudnn8-runtime-ubuntu22.04
 LABEL maintainer="Dominic Kelly"
 
 ARG PYTHON_VERSION=3.10
-ARG CUDA_VERSION=3.8
+ARG CUDA_VERSION=11.8
 
 ENV CONDA_DIR=/opt/conda
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
