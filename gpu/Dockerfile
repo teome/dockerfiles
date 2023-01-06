@@ -14,6 +14,7 @@ RUN apt-get update > /dev/null && \
     git \
     htop \
     vim.tiny \
+    tmux \
     tini \
     > /dev/null && \
     apt-get clean && \
