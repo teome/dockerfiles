@@ -2,7 +2,11 @@ FROM docker.io/mambaorg/micromamba:1-jammy
 
 LABEL maintainer="Dominic Kelly"
 
+ARG MAMBA_USER=mamba
 ARG PYTHON_VERSION=3.10
+
+# mamba container uses non-root user, so change to root for apt
+USER root
 
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
@@ -14,6 +18,8 @@ RUN apt-get update > /dev/null && \
     tini && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+USER $MAMBA_USER
 
 RUN micromamba install --yes --name base \
     --channel pytorch-nightly \

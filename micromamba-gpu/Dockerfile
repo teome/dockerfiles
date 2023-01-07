@@ -39,6 +39,8 @@ ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/opt/nvidia/nvidia_entrypoint.sh"]
 # You can modify the CMD statement as needed....
 CMD ["/bin/bash"]
 
+USER root
+
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
     wget bzip2 ca-certificates \
@@ -49,6 +51,8 @@ RUN apt-get update > /dev/null && \
     tini && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+USER $MAMBA_USER
 
 RUN micromamba install --yes --name base \
     --channel pytorch-nightly \
