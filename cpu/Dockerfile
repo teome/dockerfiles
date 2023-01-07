@@ -27,19 +27,22 @@ RUN apt-get update > /dev/null && \
     htop \
     vim.tiny \
     tmux \
-    tini \
-    > /dev/null && \
+    tini && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    # wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
-    wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
     /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
     rm /tmp/miniforge.sh && \
-    conda install -y python=${PYTHON_VERSION} cmake conda-build pyyaml ipython jupyter black pylint transformers sentencepiece wandb && \
-    conda install -y numpy mkl "libblas=*=*mkl" && \
-    conda install -y pytorch torchvision torchaudio cpuonly -c pytorch-nightly && \
+    conda install -y mamba && \
+    mamba create -n pt -y python=${PYTHON_VERSION} \
+    pytorch torchvision torchaudio cpuonly \
+    cmake pyyaml ipython jupyter black pylint \
+    transformers sentencepiece accelerate wandb \
+    numpy mkl "libblas=*=*mkl" \
+    -c pytorch-nightly -c nvidia -c conda-forge && \
     jupyter notebook --generate-config && \
-    conda clean --tarballs --index-cache --packages --yes && \
+    mamba clean --all --yes && \
     find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
     find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \
     conda clean --force-pkgs-dirs --all --yes  && \
