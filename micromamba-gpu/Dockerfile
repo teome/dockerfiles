@@ -20,6 +20,13 @@ RUN apt-get update > /dev/null && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /certs && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /certs/mykey.key \
+    -out /certs/mycert.pem \
+    -subj "/C=GB/ST=London/L=London/O=Global Security/OU=AGI/CN=jnb.ai" && \
+    chmod -R 644 /certs
+
 USER $MAMBA_USER
 
 # TODO: remove explicit pinned libcufile, should be auto installed
@@ -37,19 +44,7 @@ RUN micromamba install --yes --name base \
     micromamba clean --all --yes
 
 # Setup notebook ssl and https
-RUN mkdir -p /home/${MAMBA_USER}/.jupyter/ && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /home/${MAMBA_USER}/mykey.key \
-    -out /home/${MAMBA_USER}/mycert.pem
+RUN mkdir -p /home/${MAMBA_USER}/.jupyter
+COPY juypter_notebook_config.py /home/${MAMBA_USER}/juypter_notebook_config.py
 
-COPY <<EOF /home/${MAMBA_USER}/.jupyter/
-c.NotebookApp.certfile = u'/home/${MAMBA_USER}/mycert.pem'
-c.NotebookApp.keyfile = u'/home/${MAMBA_USER}/mykey.key'
-# Set ip to '*' to bind on all interfaces (ips) for the public server
-c.NotebookApp.ip = '*'
-c.NotebookApp.password = u'sha1:bcd259ccf...<your hashed password here>'
-c.NotebookApp.open_browser = False
-# It is a good idea to set a known, fixed port for server access
-c.NotebookApp.port = 9999
-EOF
-
+WORKDIR /home/${MAMBA_USER}
