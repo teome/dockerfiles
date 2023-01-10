@@ -52,7 +52,7 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/lat
     mamba clean --all --yes && \
     # find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
     # find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \
-    mamba clean --force-pkgs-dirs --all --yes  && \
+    # mamba clean --force-pkgs-dirs --all --yes  && \
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> /etc/skel/.bashrc && \
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> ~/.bashrc
 
