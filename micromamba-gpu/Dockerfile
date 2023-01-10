@@ -30,6 +30,10 @@ RUN mkdir -p /certs && \
 
 USER $MAMBA_USER
 
+# Setup notebook ssl and https
+RUN mkdir -p /home/${MAMBA_USER}/.jupyter
+COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
+
 # TODO: remove explicit pinned libcufile, should be auto installed
 # https://github.com/mamba-org/mamba/issues/2167
 RUN micromamba install --yes --name base \
@@ -43,9 +47,5 @@ RUN micromamba install --yes --name base \
     transformers sentencepiece accelerate wandb \
     numpy mkl "libblas=*=*mkl" && \
     micromamba clean --all --yes
-
-# Setup notebook ssl and https
-RUN mkdir -p /home/${MAMBA_USER}/.jupyter
-COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
 
 WORKDIR /home/${MAMBA_USER}
