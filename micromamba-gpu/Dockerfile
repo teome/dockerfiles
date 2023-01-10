@@ -32,7 +32,7 @@ USER $MAMBA_USER
 
 # Setup notebook ssl and https
 RUN mkdir -p /home/${MAMBA_USER}/.jupyter
-COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
+COPY --chown=$MAMBA_USER:$MAMBA_USER jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
 
 # TODO: remove explicit pinned libcufile, should be auto installed
 # https://github.com/mamba-org/mamba/issues/2167

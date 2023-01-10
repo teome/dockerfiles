@@ -31,7 +31,7 @@ USER $MAMBA_USER
 
 # Setup notebook ssl and https
 RUN mkdir -p /home/${MAMBA_USER}/.jupyter
-COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
+COPY --chown=$MAMBA_USER:$MAMBA_USER jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
 
 RUN micromamba install --yes --name base \
     --channel pytorch-nightly \
