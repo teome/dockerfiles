@@ -2,7 +2,7 @@ FROM docker.io/mambaorg/micromamba:1-jammy
 
 LABEL maintainer="Dominic Kelly"
 
-ARG MAMBA_USER=mamba
+ARG MAMBA_USER=mambauser
 ARG PYTHON_VERSION=3.10
 
 # mamba container uses non-root user, so change to root for apt
