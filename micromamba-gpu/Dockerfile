@@ -4,7 +4,7 @@ LABEL maintainer="Dominic Kelly"
 
 ARG PYTHON_VERSION=3.10
 ARG CUDA_VERSION=11.8
-ARG MAMBA_USER=mamba
+ARG MAMBA_USER=mambauser
 
 # mamba container uses non-root user, so change to root for apt
 USER root
@@ -25,7 +25,8 @@ RUN mkdir -p /certs && \
     -keyout /certs/mykey.key \
     -out /certs/mycert.pem \
     -subj "/C=GB/ST=London/L=London/O=Global Security/OU=AGI/CN=jnb.ai" && \
-    chmod -R 644 /certs
+    chmod 755 /certs && \
+    chmod 644 /certs/*
 
 USER $MAMBA_USER
 
@@ -45,6 +46,6 @@ RUN micromamba install --yes --name base \
 
 # Setup notebook ssl and https
 RUN mkdir -p /home/${MAMBA_USER}/.jupyter
-COPY juypter_notebook_config.py /home/${MAMBA_USER}/juypter_notebook_config.py
+COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
 
 WORKDIR /home/${MAMBA_USER}
