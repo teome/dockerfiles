@@ -19,7 +19,19 @@ RUN apt-get update > /dev/null && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /certs && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /certs/mykey.key \
+    -out /certs/mycert.pem \
+    -subj "/C=GB/ST=London/L=London/O=Global Security/OU=AGI/CN=jnb.ai" && \
+    chmod 755 /certs && \
+    chmod 644 /certs/*
+
 USER $MAMBA_USER
+
+# Setup notebook ssl and https
+RUN mkdir -p /home/${MAMBA_USER}/.jupyter
+COPY jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
 
 RUN micromamba install --yes --name base \
     --channel pytorch-nightly \
@@ -31,3 +43,5 @@ RUN micromamba install --yes --name base \
     transformers sentencepiece accelerate wandb \
     numpy mkl "libblas=*=*mkl" && \
     micromamba clean --all --yes
+
+WORKDIR /home/${MAMBA_USER}
