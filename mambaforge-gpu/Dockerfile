@@ -3,11 +3,13 @@ LABEL maintainer="Dominic Kelly"
 
 ARG PYTHON_VERSION=3.10
 ARG CUDA_VERSION=11.8
-ARG MAMBA_USER=dom
 
 ENV CONDA_DIR=/opt/conda
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH=${CONDA_DIR}/envs/pt/bin:${CONDA_DIR}/bin:${PATH}
+
+RUN mkdir -p ${CONDA_DIR} && \
+    chmod -R 777 ${CONDA_DIR}
 
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
@@ -21,10 +23,6 @@ RUN apt-get update > /dev/null && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1000 --shell /bin/bash ${MAMBA_USER} && \
-    usermod -aG sudo ${MAMBA_USER} && \
-    echo "${MAMBA_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
 RUN mkdir -p /certs && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /certs/mykey.key \
@@ -33,11 +31,9 @@ RUN mkdir -p /certs && \
     chmod 755 /certs && \
     chmod 644 /certs/*
 
-USER ${MAMBA_USER}
-
 # Setup notebook ssl and https
-RUN mkdir -p /home/${MAMBA_USER}/.jupyter
-COPY --chown=$MAMBA_USER:$MAMBA_USER jupyter_notebook_config.py /home/${MAMBA_USER}/.jupyter/jupyter_notebook_config.py
+RUN mkdir -p /root/.jupyter
+COPY jupyter_notebook_config.py /root/.jupyter/jupyter_notebook_config.py
 
 RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
     /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
@@ -55,8 +51,6 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/lat
     # mamba clean --force-pkgs-dirs --all --yes  && \
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> /etc/skel/.bashrc && \
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> ~/.bashrc
-
-WORKDIR /home/${MAMBA_USER}
 
 ENTRYPOINT ["/opt/nvidia/nvidia_entrypoint.sh"]
 CMD ["bash"]
