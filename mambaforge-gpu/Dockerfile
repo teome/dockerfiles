@@ -8,9 +8,6 @@ ENV CONDA_DIR=/opt/conda
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH=${CONDA_DIR}/envs/pt/bin:${CONDA_DIR}/bin:${PATH}
 
-RUN mkdir -p ${CONDA_DIR} && \
-    chmod -R 777 ${CONDA_DIR}
-
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
     wget bzip2 ca-certificates \
