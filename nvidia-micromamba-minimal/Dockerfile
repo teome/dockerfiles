@@ -36,6 +36,17 @@ RUN apt-get update > /dev/null && \
     echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
     chmod 0440 /etc/sudoers.d/$USERNAME
 
+# DL and setup mamba root prefix -- needed as we're using bare micromamba
+# TODO fix TARGETARCH spec
+ARG TARGETARCH=amd64
+RUN test "$TARGETARCH" = 'amd64' && export ARCH='64'; \
+    test "$TARGETARCH" = 'arm64' && export ARCH='aarch64'; \
+    test "$TARGETARCH" = 'ppc64le' && export ARCH='ppc64le'; \
+    curl -L "https://micro.mamba.pm/api/micromamba/linux-${ARCH}/${MAMBA_VERSION}" | \
+    tar -xj -C "/" "bin/micromamba" && \
+    mkdir -p "$MAMBA_ROOT_PREFIX/conda-meta" && \
+    chmod -R a+rwx "$MAMBA_ROOT_PREFIX"
+
 RUN mkdir -p /certs && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /certs/mykey.key \
@@ -43,16 +54,6 @@ RUN mkdir -p /certs && \
     -subj "/C=GB/ST=London/L=London/O=Global Security/OU=AGI/CN=jnb.ai" && \
     chmod 755 /certs && \
     chmod 644 /certs/*
-
-# DL and setup mamba root prefix -- needed as we're using bare micromamba
-ARG TARGETARCH
-RUN test "$TARGETARCH" = 'amd64' && export ARCH='64'; \
-    test "$TARGETARCH" = 'arm64' && export ARCH='aarch64'; \
-    test "$TARGETARCH" = 'ppc64le' && export ARCH='ppc64le'; \
-    curl -L "curl -Ls https://micro.mamba.pm/api/micromamba/linux-${ARCH}/${MAMBA_VERSION}" | \
-    tar -xj -C "/" "bin/micromamba" && \
-    mkdir -p "$MAMBA_ROOT_PREFIX/conda-meta" && \
-    chmod -R a+rwx "$MAMBA_ROOT_PREFIX"
 
 USER $USERNAME
 
