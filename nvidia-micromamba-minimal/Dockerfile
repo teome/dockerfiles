@@ -5,6 +5,7 @@ LABEL maintainer="Dominic Kelly"
 
 ARG PYTHON_VERSION=3.10
 ARG CUDA_VERSION=11.8
+ARG MAMBA_VERSION=latest
 
 ARG USERNAME=dom
 ARG USER_UID=1000
@@ -21,7 +22,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 RUN apt-get update > /dev/null && \
     apt-get install --no-install-recommends --yes \
-    wget bzip2 ca-certificates \
+    wget curl bzip2 ca-certificates \
     git \
     htop \
     vim.tiny \
@@ -41,8 +42,14 @@ RUN mkdir -p /certs && \
     chmod 755 /certs && \
     chmod 644 /certs/*
 
-# Setup mamba root prefix -- needed as we're using bare micromamba
-RUN mkdir -p "$MAMBA_ROOT_PREFIX/conda-meta" && \
+# DL and setup mamba root prefix -- needed as we're using bare micromamba
+ARG TARGETARCH
+RUN test "$TARGETARCH" = 'amd64' && export ARCH='64'; \
+    test "$TARGETARCH" = 'arm64' && export ARCH='aarch64'; \
+    test "$TARGETARCH" = 'ppc64le' && export ARCH='ppc64le'; \
+    curl -L "curl -Ls https://micro.mamba.pm/api/micromamba/linux-${ARCH}/${MAMBA_VERSION}" | \
+    tar -xj -C "/" "bin/micromamba" && \
+    mkdir -p "$MAMBA_ROOT_PREFIX/conda-meta" && \
     chmod -R a+rwx "$MAMBA_ROOT_PREFIX"
 
 USER $USERNAME
@@ -51,7 +58,7 @@ USER $USERNAME
 RUN mkdir -p /home/${USERNAME}/.jupyter
 COPY --chown=$USERNAME:$USERNAME jupyter_notebook_config.py /home/${USERNAME}/.jupyter/jupyter_notebook_config.py
 
-RUN micromamba create --name base --yes \
+RUN micromamba install --name base --yes \
     --channel pytorch-nightly \
     --channel nvidia \
     --channel conda-forge \
