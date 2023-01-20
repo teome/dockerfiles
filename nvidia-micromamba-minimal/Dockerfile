@@ -61,15 +61,12 @@ USER $USERNAME
 RUN mkdir -p /home/${USERNAME}/.jupyter
 COPY --chown=$USERNAME:$USERNAME jupyter_notebook_config.py /home/${USERNAME}/.jupyter/jupyter_notebook_config.py
 
-# TODO: remove explicit pinned libcufile, should be auto installed
-# https://github.com/mamba-org/mamba/issues/2167
 RUN micromamba install --name base --yes \
     --channel pytorch-nightly \
     --channel nvidia \
     --channel conda-forge \
     python=${PYTHON_VERSION} \
     pytorch torchvision torchaudio pytorch-cuda=${CUDA_VERSION} \
-    "libcufile>=1.4,<1.5" \
     cmake pip pyyaml ipython jupyter black pylint \
     transformers sentencepiece accelerate wandb \
     numpy mkl "libblas=*=*mkl" && \
