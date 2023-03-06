@@ -60,8 +60,6 @@ USER $USERNAME
 RUN mkdir -p /home/${USERNAME}/.jupyter
 COPY --chown=$USERNAME:$USERNAME jupyter_notebook_config.py /home/${USERNAME}/.jupyter/jupyter_notebook_config.py
 
-# TODO: remove explicit pinned libcufile, should be auto installed
-# https://github.com/mamba-org/mamba/issues/2167
 RUN micromamba install --name base --yes \
     --channel pytorch-nightly \
     --channel conda-forge \
