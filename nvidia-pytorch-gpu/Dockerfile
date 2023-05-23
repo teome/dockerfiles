@@ -47,7 +47,7 @@ RUN mkdir -p /certs && \
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip --no-cache-dir install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
     python3 -m pip install --no-cache-dir \
-    cmake pip pyyaml ipython notebook black pylint \
+    cmake pip pyyaml ipython notebook matplotlib black pylint \
     transformers sentencepiece accelerate wandb && \
     python3 -m pip cache purge
 
