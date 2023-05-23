@@ -29,6 +29,7 @@ RUN apt-get update > /dev/null && \
     sudo \
     tmux \
     tini \
+    graphviz \
     python${PYTHON_VERSION} \
     python3-pip && \
     apt-get clean && \
@@ -47,7 +48,7 @@ RUN mkdir -p /certs && \
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip --no-cache-dir install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
     python3 -m pip install --no-cache-dir \
-    cmake pip pyyaml ipython notebook matplotlib black pylint \
+    cmake pip pyyaml ipython notebook matplotlib black pylint graphviz pytest \
     transformers sentencepiece accelerate wandb && \
     python3 -m pip cache purge
 
