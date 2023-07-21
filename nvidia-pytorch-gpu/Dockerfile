@@ -3,7 +3,9 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="Dominic Kelly"
 
-ARG PYTHON_VERSION=3.11
+# TODO: check on progress for pytorch support for python3.11
+# ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.10
 ARG CUDA_VERSION=11.8
 
 ARG USERNAME=dom
