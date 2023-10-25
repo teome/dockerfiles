@@ -325,7 +325,7 @@ c = get_config()  #noqa
 
 ## The IP address the Jupyter server will listen on.
 #  Default: 'localhost'
-# c.ServerApp.ip = '*'
+c.ServerApp.ip = '*'
 
 ## Supply extra arguments that will be passed to Jinja environment.
 #  Default: {}
