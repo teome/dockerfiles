@@ -58,7 +58,7 @@ ENV PATH=/opt/conda/bin:$PATH
 
 # Setup notebook ssl and https
 RUN mkdir -p /home/${USERNAME}/.jupyter
-COPY --chown=$USERNAME:$USERNAME jupyter_notebook_config.py /home/${USERNAME}/.jupyter/jupyter_notebook_config.py
+COPY --chown=$USERNAME:$USERNAME jupyter_server_config.py /home/${USERNAME}/.jupyter/jupyter_server_config.py
 
 ENV PATH=/home/${USERNAME}/.local/bin:$PATH
 WORKDIR /home/${USERNAME}
