@@ -434,7 +434,7 @@ c.ServerApp.open_browser = False
 ## DEPRECATED in 2.0. Use PasswordIdentityProvider.hashed_password
 #  Default: ''
 # c.ServerApp.password = ''
-c.PasswordIdentityProvider.hashed_password = ''
+c.PasswordIdentityProvider.hashed_password = u'argon2:$argon2id$v=19$m=10240,t=10,p=8$7rGE+PCcheOUkVwr4RvRcQ$X4GTYOvRjQH7QdoAj0M7rZSHsdKiuiJgol4KdMayDQw'
 
 ## DEPRECATED in 2.0. Use PasswordIdentityProvider.password_required
 #  Default: False
