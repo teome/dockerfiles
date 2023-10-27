@@ -38,11 +38,10 @@ ENV BASH_ENV=/etc/profile
 
 RUN /opt/conda/bin/pip install --upgrade pip && \
     /opt/conda/bin/pip install --no-cache-dir \
-        'jupyterlab>=4.0.0,<5.0.0a0' jupyterlab-lsp 'python-lsp-server[all]' && \
+        cmake pyyaml ipython notebook matplotlib scipy black pylint graphviz pytest gcsfs\
+        sentencepiece transformers accelerate diffusers wandb einops && \
     /opt/conda/bin/pip install --no-cache-dir \
-        cmake pyyaml ipython notebook matplotlib scipy black pylint graphviz pytest \
-        sentencepiece transformers accelerate diffusers wandb einops \
-    && \
+        'jupyterlab>=4.0.0,<5.0.0a0' jupyterlab-lsp 'python-lsp-server[all]' && \
     /opt/conda/bin/pip cache purge
 
 RUN mkdir -p /certs && \
