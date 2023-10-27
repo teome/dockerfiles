@@ -36,14 +36,6 @@ RUN groupadd --gid ${USER_UID} ${USERNAME} && \
 # Ensure that non-interactive shells load /etc/profile
 ENV BASH_ENV=/etc/profile
 
-RUN /opt/conda/bin/pip install --upgrade pip && \
-    /opt/conda/bin/pip install --no-cache-dir \
-        cmake pyyaml ipython notebook matplotlib scipy black pylint graphviz pytest gcsfs\
-        sentencepiece transformers accelerate diffusers wandb einops && \
-    /opt/conda/bin/pip install --no-cache-dir \
-        'jupyterlab>=4.0.0,<5.0.0a0' jupyterlab-lsp 'python-lsp-server[all]' && \
-    /opt/conda/bin/pip cache purge
-
 RUN mkdir -p /certs && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /certs/mykey.key \
@@ -67,6 +59,14 @@ RUN git clone https://github.com/fastai/course22p2 && \
     cd course22p2 && \
     sed -i -e 's/torch>=1.7,<2.1/torch>=1.7,<2.2/g' settings.ini && \
     /opt/conda/bin/pip install -e .
+
+RUN /opt/conda/bin/pip install --upgrade pip && \
+    /opt/conda/bin/pip install --no-cache-dir \
+        cmake pyyaml ipython notebook matplotlib scipy black pylint graphviz pytest gcsfs\
+        sentencepiece transformers accelerate diffusers wandb einops && \
+    /opt/conda/bin/pip install --no-cache-dir \
+        'jupyterlab>=4.0.0,<5.0.0a0' jupyterlab-lsp 'python-lsp-server[all]' && \
+    /opt/conda/bin/pip cache purge
 
 # You can modify the CMD statement as needed....
 CMD ["/bin/bash"]
