@@ -62,7 +62,8 @@ WORKDIR /home/${USERNAME}
 
 RUN /opt/conda/bin/pip install --upgrade pip && \
     /opt/conda/bin/pip install --no-cache-dir \
-        black cmake gcsfs graphviz ipython matplotlib notebook pylint pydantic pytest python-dotenv pyyaml requests scipy sseclient-py tqdm \
+        black cmake gcsfs ipython matplotlib notebook pylint pydantic pytest python-dotenv pyyaml requests scipy sseclient-py tqdm \
+        openai \
         accelerate datasets diffusers gradio optimum peft transformers \
         bitsandbytes deepspeed einops exllamav2 sentencepiece triton wandb \
         'jupyterlab>=4.0.0,<5.0.0a0' jupyterlab-lsp 'python-lsp-server[all]' && \
